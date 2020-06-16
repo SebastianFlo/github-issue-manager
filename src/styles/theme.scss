@@ -1,5 +1,13 @@
 :root {
   --background-color: #F2C94C;
+  --background-color-light: #ede5cb;
   --font-color: #F2F2F2;
   --color-warning: #F2994A;
+  --color-black: #000000;
+  --color-black-light: #343434;
 }
+
+.background-light {
+  background-color: var(--background-color-light);
+}
+

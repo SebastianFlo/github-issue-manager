@@ -1,0 +1,74 @@
+import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+
+import { Issue } from 'src/app/data/github/state';
+import { ConfirmationComponent } from '../confirmation/confirmation.component';
+
+@Component({
+  selector: 'app-issue',
+  template: `
+    <mat-card class="issue-card" cdkDrag [cdkDragData]="issue.title">
+      <mat-card-header>
+        <mat-card-title>{{ issue.title }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="flex-layout layout-center-h layout-center-v">
+        <p>{{ issue.body }}</p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <div class="flex-layout layout-center-h">
+          <button mat-button color="warn" (click)="openDialog({ prompt: 'Are you sure you want to close this issue?', onok: 'close' })">Close</button>
+          <button mat-button color="primary" (click)="openDialog({ prompt: 'Are you sure you want to resolve this issue?', onok: 'resolve' })">Resolve</button>
+        </div>
+      </mat-card-actions>
+
+      <mat-card *cdkDragPreview>
+        <mat-card-header>
+          <mat-card-title>{{ issue.title }}</mat-card-title>
+        </mat-card-header>
+      </mat-card>
+    </mat-card>
+  `,
+  styleUrls: ['./issue.component.scss']
+})
+export class IssueComponent implements OnInit {
+  @Input() issue: Issue;
+  @Output() dropped: EventEmitter<Event> = new EventEmitter<Event>();
+
+  issueMethods = {
+    resolve: null,
+    close: null,
+  }
+
+  constructor(public dialog: MatDialog) {
+    this.issueMethods.resolve = this.resolveIssue;
+    this.issueMethods.close = this.closeIssue;
+  }
+
+  openDialog(data: any) {
+    const dialogRef = this.dialog.open(ConfirmationComponent, { data });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+
+      if (!result) {
+        return;
+      }
+
+      this.issueMethods[result](this.issue);
+    });
+  }
+
+  closeIssue(issue) {
+    console.log('closing issue', issue.resourcePath)
+  }
+
+  resolveIssue(issue) {
+    console.log('resolving issue', issue.resourcePath)
+  }
+
+  ngOnInit(): void {}
+
+
+}

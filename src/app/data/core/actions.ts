@@ -3,6 +3,7 @@
 import * as types from './types';
 
 import { createAction, props } from '@ngrx/store';
+import { User } from '../models';
 
 export const SetToken = createAction(
   types.SET_TOKEN,
@@ -11,5 +12,5 @@ export const SetToken = createAction(
 
 export const SetUser = createAction(
   types.SET_USER,
-  props<{ payload: object }>()
+  props<{ payload: User }>()
 );

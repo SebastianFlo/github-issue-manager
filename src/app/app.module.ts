@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-// import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -21,6 +20,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { GithubReducer } from './data/github/reducer';
 import { metaReducers } from './data/meta.reducers';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +29,6 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    // NoopAnimationsModule,
     BrowserAnimationsModule,
     GraphQLModule,
     HttpClientModule,
@@ -38,6 +37,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
     // Modules
     LoginModule,
+    DashboardModule,
     StoreModule.forRoot({
       core: CoreReducer,
       github: GithubReducer
@@ -65,8 +65,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
         }
       },
       deps: [HttpLink]
-    },
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+    }
   ],
   bootstrap: [AppComponent]
 })

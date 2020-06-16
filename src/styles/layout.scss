@@ -15,6 +15,14 @@ html {
     justify-content: center;
   }
 
+  &.layout-space-between {
+    justify-content: space-between;
+  }
+
+  &.layout-space-around {
+    justify-content: space-around;
+  }
+
   &.layout-center-v {
     align-items: center;
   }

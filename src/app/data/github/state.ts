@@ -1,11 +1,15 @@
 export interface Issue {
-  node: {
-    title: string;
+  title: string;
+  resourcePath: string;
+  body: string;
+  repository: {
+    name: string;
+    resourcePath: string;
   }
 }
 
 export interface Issues {
-  edges: Issue[]
+  edges: { node: Issue }[]
 }
 
 export interface Repo {

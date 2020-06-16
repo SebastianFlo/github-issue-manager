@@ -14,6 +14,7 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Repos, Repo } from 'src/app/data/github/state';
 import { selectReposWithIssues } from 'src/app/data/github/selectors';
+import { User } from 'src/app/data/models';
 
 @Component({
   selector: 'app-login',
@@ -108,7 +109,7 @@ export class LoginComponent implements OnInit {
   // submitted = false;
   loading = false;
   // error;
-  user = { name: '' };
+  user: User = { name: '', login: '' };
   // repos: Repos = { edges: [] };
   // returnUrl: string;
 
