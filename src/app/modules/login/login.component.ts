@@ -21,38 +21,40 @@ import { selectReposWithIssues } from 'src/app/data/github/selectors';
 
   <div class="flex-layout layout-center-v layout-center-h">
     <mat-card class="login-card">
-      <mat-card-header>
+      <mat-card-header *ngIf="!user.name">
         <mat-card-title>Github Token</mat-card-title>
         <mat-card-subtitle>Enter an existing Github token or create one on <a target="new" href="https://github.com">Github</a></mat-card-subtitle>
       </mat-card-header>
 
-      <mat-card-content>
+      <mat-card-content class="flex-layout layout-center-h layout-center-v">
 
-      <div class="token-form">
-        <mat-form-field fullWidth="true" class="input-full-width">
-          <input [formControl]="authToken" class="input-full-width" matInput placeholder="Ex. 123456" value="">
-        </mat-form-field>
+        <div *ngIf="!user.name" class="token-form">
+          <mat-form-field class="input-full-width">
+            <input [formControl]="authToken" class="input-full-width" matInput placeholder="Ex. 123456" value="">
+          </mat-form-field>
 
-        <div *ngIf="authToken.errors?.pattern" class="flex-layout layout-center-h text-warning">
-          Token pattern is invalid
+          <div *ngIf="authToken.errors?.pattern" class="flex-layout layout-center-h text-warning">
+            Token pattern is invalid
+          </div>
         </div>
-      </div>
 
-      <div class="token-form">
-        <mat-form-field fullWidth="true" class="input-full-width">
-          <input [formControl]="authToken" class="input-full-width" matInput placeholder="Ex. 123456" value="">
-        </mat-form-field>
-
-        <div *ngIf="authToken.errors?.pattern" class="flex-layout layout-center-h text-warning">
-          Token pattern is invalid
+        <div *ngIf="user && user.name" class="welcome-form">
+          <div class="flex-layout layout-center-h layout-center-v">
+            <div>
+              <h3>Welcome {{ user?.name }} 😊</h3>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <div *ngIf="loading" class="flex-layout layout-center-h layout-center-v">
+          <mat-progress-spinner diameter="50" mode="indeterminate"></mat-progress-spinner>
+        </div>
 
       </mat-card-content>
 
       <mat-card-actions>
-        <div class="flex-layout layout-center-h">
-          <button [disabled]="authToken.invalid" mat-button (click)="addToken()">LOGIN</button>
+        <div *ngIf="!user.name && !loading" class="flex-layout layout-center-h">
+          <button [disabled]="!authToken.dirty || authToken.invalid" mat-button (click)="addToken()">LOGIN</button>
         </div>
       </mat-card-actions>
     </mat-card>
@@ -104,16 +106,16 @@ export class LoginComponent implements OnInit {
   authToken = new FormControl('');
   success = true;
   // submitted = false;
-  // loading = false;
+  loading = false;
   // error;
-  user;
+  user = { name: '' };
   // repos: Repos = { edges: [] };
   // returnUrl: string;
 
   constructor(
     // private formBuilder: FormBuilder,
     // private route: ActivatedRoute,
-    // private router: Router,
+    private router: Router,
     // private authenticationService: AuthenticationService,
     private store: Store<AppState>,
     private apollo: Apollo,
@@ -133,6 +135,7 @@ export class LoginComponent implements OnInit {
   }
 
   addToken() {
+    this.loading = true;
     this.store.dispatch(
       CoreActions.SetToken({ payload: this.authToken.value })
     );
@@ -142,14 +145,20 @@ export class LoginComponent implements OnInit {
         query: gql`
           {
             viewer {
-              login
+              login,
+              name
             }
           }
         `
       })
       .valueChanges.subscribe((result: any) => {
-        this.user = result.data && result.data.viewer.login;
+        this.user = result.data && result.data.viewer;
         this.store.dispatch(CoreActions.SetUser({ payload: this.user }));
+
+        setTimeout(() => {
+          this.router.navigate(['dashboard']);
+        }, 2 * 1E3)
+      });
   }
 
   // convenience getter for easy access to form fields

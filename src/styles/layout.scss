@@ -7,6 +7,10 @@ html {
   display: flex;
   height: 100%;
 
+  &.vertical {
+    flex-direction: column;
+  }
+
   &.layout-center-h {
     justify-content: center;
   }
