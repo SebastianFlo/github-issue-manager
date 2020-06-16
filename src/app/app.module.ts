@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginModule } from './modules/login/login.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,10 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     NoopAnimationsModule,
     GraphQLModule,
-    HttpClientModule
+    HttpClientModule,
+
+    // Modules
+    LoginModule
   ],
   providers: [],
   bootstrap: [AppComponent]
