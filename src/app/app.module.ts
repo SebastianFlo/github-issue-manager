@@ -19,6 +19,7 @@ import { HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { GithubReducer } from './data/github/reducer';
 import { metaReducers } from './data/meta.reducers';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { metaReducers } from './data/meta.reducers';
         }
       },
       deps: [HttpLink]
-    }
+    },
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,21 @@
+html {
+  background-color: var(--background-color);
+  color: var(--font-color);
+}
+
+.flex-layout {
+  display: flex;
+  height: 100%;
+
+  &.layout-center-h {
+    justify-content: center;
+  }
+
+  &.layout-center-v {
+    align-items: center;
+  }
+}
+
+.input-full-width {
+  width: 100%;
+}
