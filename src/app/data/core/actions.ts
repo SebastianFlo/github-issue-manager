@@ -1,18 +1,15 @@
-import { Action } from 'redux';
-import { ReduxAction } from '../models';
+// import { Action } from 'redux';
+// import { ReduxAction } from '../models';
 import * as types from './types';
 
-@ReduxAction
-export class StartLoading implements Action {
-    readonly type = types.START_LOADING;
-    constructor(public payload: string) { }
-}
+import { createAction, props } from '@ngrx/store';
 
-@ReduxAction
-export class FinishLoading implements Action {
-    readonly type = types.FINISH_LOADING;
-}
+export const SetToken = createAction(
+  types.SET_TOKEN,
+  props<{ payload: string }>()
+);
 
-export type CoreActions =
-    | StartLoading
-    | FinishLoading;
+export const SetUser = createAction(
+  types.SET_USER,
+  props<{ payload: object }>()
+);

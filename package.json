@@ -11,6 +11,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-redux/store": "^9.0.0",
     "@angular/animations": "~9.1.11",
     "@angular/cdk": "^9.2.4",
     "@angular/common": "~9.1.11",
@@ -21,6 +22,7 @@
     "@angular/platform-browser": "~9.1.11",
     "@angular/platform-browser-dynamic": "~9.1.11",
     "@angular/router": "~9.1.11",
+    "@ngrx/store": "^9.2.0",
     "apollo-angular": "^1.9.1",
     "apollo-angular-link-http": "^1.10.0",
     "apollo-cache-inmemory": "^1.6.0",
@@ -28,7 +30,6 @@
     "apollo-link": "^1.2.11",
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.0",
-    "ng-redux": "^4.4.1",
     "redux": "^4.0.5",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
