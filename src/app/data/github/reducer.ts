@@ -6,6 +6,7 @@ import { defaultGithubState, GithubState } from './state';
 const githubReducer = createReducer(
   defaultGithubState,
   on(actions.SetRepos, (state, action) => ({ ...state, repos: action.payload })),
+  on(actions.SetIssues, (state, action) => ({ ...state, issues: action.payload })),
 );
 
 export function GithubReducer(state: GithubState | undefined, action: Action) {

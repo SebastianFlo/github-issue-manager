@@ -6,7 +6,7 @@ import { selectUser } from 'src/app/data/core/selectors';
 import * as GithubActions from '../../data/github/actions';
 import { tap } from 'rxjs/operators';
 import { User } from 'src/app/data/models';
-import { Issue } from 'src/app/data/github/state';
+import { Issue, Issues } from 'src/app/data/github/state';
 import { selectIssues } from 'src/app/data/github/selectors';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -22,13 +22,13 @@ import { CdkDragDrop, copyArrayItem, transferArrayItem, moveItemInArray } from '
       </h2>
     </div>
 
-    {{ this.issues$ | async | json }}
+    <!-- {{ this.issues$ | async | json }} -->
 
-    <div id="issue-list" class="dashboard-issues flex-layout layout-space-around"
+    <div id="issue-list" class="dashboard-issues flex-scroll-h flex-layout layout-space-between"
       cdkDropList cdkDropListOrientation="horizontal"
       [cdkDropListData]="issues"
       (cdkDropListDropped)="drop($event)">
-      <div class="dashboard-issue" *ngFor="let issue of issues">
+      <div class="dashboard-issue flex-scroll-item" *ngFor="let issue of issues">
         <app-issue [issue]="issue" (dropped)="drop($event)"></app-issue>
       </div>
     </div>
@@ -100,45 +100,95 @@ import { CdkDragDrop, copyArrayItem, transferArrayItem, moveItemInArray } from '
 })
 export class DashboardComponent implements OnInit {
   user$: Observable<User>;
-  issues$: Observable<Issue[]>;
+  issues$: Observable<Issues>;
 
-  issues = [
-    {
-      title: '[Fix] UI: Email width on mobile',
-      body: 'Could make the font a bit smaller on mobile',
-      resourcePath: '/SebastianFlo/nuxt-panteon-project/issues/2',
-      repository: {
-        name: 'nuxt-panteon-project',
-        description:
-          'Playing with Nuxt to create a static site for a construction company',
-        resourcePath: '/SebastianFlo/nuxt-panteon-project',
-      },
-    },
-    {
-      title: '[Feature] Migrate REST to GraphQL',
-      resourcePath: '/SebastianFlo/github-issue-manager/issues/1',
-      body: 'Probably something we should consider 😄 ',
-      repository: {
-        name: 'github-issue-manager',
-        description:
-          'Developer workflow dashboard. List issues/tasks assigned to you and individually mark them as closed/resolved.',
-        resourcePath: '/SebastianFlo/github-issue-manager',
-        __typename: 'Repository',
-      },
-    },
-    {
-      title: '[Bug] Fix Internet Explorer Layout',
-      resourcePath: '/SebastianFlo/github-issue-manager/issues/2',
-      body: 'Looks a bit weird in Internet Explorer 6',
-      repository: {
-        name: 'github-issue-manager',
-        description:
-          'Developer workflow dashboard. List issues/tasks assigned to you and individually mark them as closed/resolved.',
-        resourcePath: '/SebastianFlo/github-issue-manager',
-        __typename: 'Repository',
-      },
-    },
-  ];
+  TestIssuesQuery = gql`
+  {
+    repository(owner:"octocat", name:"Hello-World") {
+      issues(last:20, states:CLOSED) {
+        edges {
+          node {
+            title
+            url
+            body
+            repository {
+              name
+              description
+              resourcePath
+            }
+          }
+        }
+      }
+    }
+  }
+  `;
+
+  MyRepoIssuesQuery = gql`
+  {
+    viewer {
+      repositories(last: 10) {
+        edges {
+          node {
+            name
+            issues(last: 10) {
+              edges {
+                node {
+                  title
+                  body
+                  resourcePath
+                  repository {
+                    name
+                    description
+                    resourcePath
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+issues: Issue[] = [];
+  // issues = [
+  //   {
+  //     title: '[Fix] UI: Email width on mobile',
+  //     body: 'Could make the font a bit smaller on mobile',
+  //     resourcePath: '/SebastianFlo/nuxt-panteon-project/issues/2',
+  //     repository: {
+  //       name: 'nuxt-panteon-project',
+  //       description:
+  //         'Playing with Nuxt to create a static site for a construction company',
+  //       resourcePath: '/SebastianFlo/nuxt-panteon-project',
+  //     },
+  //   },
+  //   {
+  //     title: '[Feature] Migrate REST to GraphQL',
+  //     resourcePath: '/SebastianFlo/github-issue-manager/issues/1',
+  //     body: 'Probably something we should consider 😄 ',
+  //     repository: {
+  //       name: 'github-issue-manager',
+  //       description:
+  //         'Developer workflow dashboard. List issues/tasks assigned to you and individually mark them as closed/resolved.',
+  //       resourcePath: '/SebastianFlo/github-issue-manager',
+  //       __typename: 'Repository',
+  //     },
+  //   },
+  //   {
+  //     title: '[Bug] Fix Internet Explorer Layout',
+  //     resourcePath: '/SebastianFlo/github-issue-manager/issues/2',
+  //     body: 'Looks a bit weird in Internet Explorer 6',
+  //     repository: {
+  //       name: 'github-issue-manager',
+  //       description:
+  //         'Developer workflow dashboard. List issues/tasks assigned to you and individually mark them as closed/resolved.',
+  //       resourcePath: '/SebastianFlo/github-issue-manager',
+  //       __typename: 'Repository',
+  //     },
+  //   },
+  // ];
 
   todos = [
     {title: 'Example Issue 1' },
@@ -158,44 +208,55 @@ export class DashboardComponent implements OnInit {
     this.user$ = this.store.pipe(select(selectUser));
     this.issues$ = this.store.pipe(select(selectIssues));
 
+    this.issues$.subscribe(issues => this.issues = issues.edges.map(issue => issue.node));
+
     this.getRepos();
   }
 
   getRepos() {
-    this.apollo
+    // this.apollo
+    //   .watchQuery({
+    //     query: gql`
+    //       {
+    //         viewer {
+    //           repositories(last: 10) {
+    //             edges {
+    //               node {
+    //                 name
+    //                 issues(last: 10) {
+    //                   edges {
+    //                     node {
+    //                       title
+    //                       body
+    //                       resourcePath
+    //                       repository {
+    //                         name
+    //                         description
+    //                         resourcePath
+    //                       }
+    //                     }
+    //                   }
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }
+    //     `,
+    //   })
+    //   .valueChanges.subscribe((result: any) => {
+    //     const repos = result.data && result.data.viewer.repositories;
+
+    //     this.store.dispatch(GithubActions.SetRepos({ payload: repos }));
+    //   });
+
+      this.apollo
       .watchQuery({
-        query: gql`
-          {
-            viewer {
-              repositories(last: 10) {
-                edges {
-                  node {
-                    name
-                    issues(last: 10) {
-                      edges {
-                        node {
-                          title
-                          body
-                          resourcePath
-                          repository {
-                            name
-                            description
-                            resourcePath
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        `,
+        query: this.TestIssuesQuery
       })
       .valueChanges.subscribe((result: any) => {
-        const repos = result.data && result.data.viewer.repositories;
-
-        this.store.dispatch(GithubActions.SetRepos({ payload: repos }));
+        const issues = result.data && result.data.repository.issues;
+        this.store.dispatch(GithubActions.SetIssues({ payload: issues }));
       });
   }
 

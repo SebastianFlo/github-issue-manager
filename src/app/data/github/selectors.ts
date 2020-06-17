@@ -14,10 +14,15 @@ export const selectReposWithIssues = createSelector(
   (github: GithubState) => github.repos.edges.filter(repo => !!repo.node.issues.edges.length)
 );
 
+// export const selectIssues = createSelector(
+//   selectGithub,
+//   (github: GithubState) => github.repos.edges.filter(repo => !!repo.node.issues.edges.length).reduce((acc, repo) => {
+//     const issues = repo.node.issues.edges;
+//     return [...acc, ...issues];
+//   }, []).map(issue => issue.node)
+// );
+
 export const selectIssues = createSelector(
   selectGithub,
-  (github: GithubState) => github.repos.edges.filter(repo => !!repo.node.issues.edges.length).reduce((acc, repo) => {
-    const issues = repo.node.issues.edges;
-    return [...acc, ...issues];
-  }, []).map(issue => issue.node)
+  (github: GithubState) => github.issues
 );

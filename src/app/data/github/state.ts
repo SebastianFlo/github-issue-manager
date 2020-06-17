@@ -25,8 +25,10 @@ export interface Repos {
 
 export interface GithubState {
   repos: Repos;
+  issues: Issues;
 }
 
 export const defaultGithubState: GithubState = {
   repos: { edges: [] },
+  issues: { edges: [] }
 };
