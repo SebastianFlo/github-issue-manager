@@ -1,0 +1,11 @@
+.status-content {
+	width: 300px;
+	height: 200px;
+	display: flex;
+	justify-content: center;
+  align-items: center;
+
+  mat-progress-spinner {
+    margin-left: 15px;
+  }
+}

@@ -11,11 +11,13 @@ import { IssueComponent } from './issue/issue.component';
 import { DashboardComponent } from './dashboard.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { StatusComponent } from './status/status.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
 @NgModule({
-  declarations: [DashboardComponent, IssueComponent, ConfirmationComponent],
+  declarations: [DashboardComponent, IssueComponent, ConfirmationComponent, StatusComponent],
   imports: [
     CommonModule,
 
@@ -24,7 +26,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatCardModule,
     MatButtonModule,
     MatGridListModule,
+    MatProgressSpinnerModule
   ],
-  entryComponents: [ConfirmationComponent]
+  entryComponents: [ConfirmationComponent, StatusComponent]
 })
 export class DashboardModule { }

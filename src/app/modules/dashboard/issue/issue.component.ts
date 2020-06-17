@@ -4,13 +4,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { Issue } from 'src/app/data/github/state';
 import { ConfirmationComponent } from '../confirmation/confirmation.component';
 import { GithubService } from 'src/app/external/github/github.service';
+import { StatusComponent } from '../status/status.component';
+import { state } from '@angular/animations';
+import { last } from 'rxjs/operators';
 
 @Component({
   selector: 'app-issue',
   template: `
-    <mat-card class="issue-card" cdkDrag [cdkDragData]="issue.title">
+    <mat-card class="issue-card" cdkDrag [cdkDragData]="issue.title" [cdkDragDisabled]="disableIssue">
       <mat-card-header>
-        <mat-card-title>{{ issue.title }}</mat-card-title>
+        <mat-card-title>{{ disableIssue ? resolution : issue.title }}</mat-card-title>
 
         <div class="example-handle" cdkDragHandle>
           <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
@@ -22,13 +25,14 @@ import { GithubService } from 'src/app/external/github/github.service';
       </mat-card-header>
 
       <mat-card-content class="flex-layout layout-center-h layout-center-v">
-        <p>{{ issue.body }}</p>
+        <p>{{ issue?.body }}</p>
       </mat-card-content>
 
       <mat-card-actions>
         <div class="flex-layout layout-center-h">
-          <button mat-button color="warn" (click)="openDialog({ prompt: 'Are you sure you want to close this issue?', onok: 'Closed' })">Close</button>
-          <button mat-button color="primary" (click)="openDialog({ prompt: 'Are you sure you want to resolve this issue?', onok: 'Resolved' })">Resolve</button>
+          <button [disabled]="disableIssue" mat-button color="warn" (click)="openDialog({ prompt: 'Are you sure you want to close this issue?', onok: 'Closed' })">Close</button>
+          <button [disabled]="disableIssue" mat-button color="primary" (click)="openDialog({ prompt: 'Are you sure you want to resolve this issue?', onok: 'Resolved' })">Resolve</button>
+          <!-- <button [disabled]="disableIssue" mat-button color="primary" (click)="testDialog()">Test</button> -->
         </div>
       </mat-card-actions>
 
@@ -45,10 +49,8 @@ export class IssueComponent implements OnInit {
   @Input() issue: Issue;
   @Output() dropped: EventEmitter<Event> = new EventEmitter<Event>();
 
-  issueMethods = {
-    resolve: null,
-    close: null,
-  }
+  disableIssue = false;
+  resolution = '';
 
   constructor(public dialog: MatDialog, private githubService: GithubService) {
     // this.issueMethods.resolve = this.resolveIssue.bind(this);
@@ -70,17 +72,47 @@ export class IssueComponent implements OnInit {
     });
   }
 
-  closeIssue(comment: string) {
-    this.githubService.commentAndCloseIssue(this.issue.id, comment);
-    console.log('closing issue', this.issue.resourcePath)
-  }
-
-  // resolveIssue(issue) {
-  //   this.githubService.addCommentToIssue(issue.id, 'Resolved');
-  //   console.log('resolving issue', issue.resourcePath)
+  // testDialog() {
+  //   const loadingStatus = this.dialog.open(StatusComponent, { data: { status: 'error' } });
   // }
 
+  closeIssue(comment: string) {
+
+    const loadingStatus = this.dialog.open(StatusComponent, { data: { status: 'loading' } });
+
+    this.githubService.commentAndCloseIssue(this.issue.id, comment).pipe(last())
+      .subscribe(({ data, errors }) => {
+        loadingStatus.close();
+
+        if (errors) {
+          const errorStatus = this.dialog.open(StatusComponent, { data: { status: 'error' } });
+
+          setTimeout(() => {
+            errorStatus.close();
+          }, 2000)
+        }
+
+
+        const successStatus = this.dialog.open(StatusComponent, { data: { status: 'success' } });
+
+        setTimeout(() => {
+          successStatus.close();
+          return;
+        }, 2000)
+
+        // state.dispatch remove iissue /id or just disable
+        this.resolution = comment;
+        this.disableIssue = true;
+      },(error) => {
+        loadingStatus.close();
+        const errorStatus = this.dialog.open(StatusComponent, { data: { status: 'error' } });
+
+        setTimeout(() => {
+          errorStatus.close();
+        }, 2000)
+        // console.log('there was an error sending the query', error); // set error state
+      });
+  }
+
   ngOnInit(): void {}
-
-
 }

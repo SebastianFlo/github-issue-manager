@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { URLS } from '../config';
-import { take } from 'rxjs/operators';
+import { take, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
@@ -63,14 +63,9 @@ export class GithubService {
   }
 
   commentAndCloseIssue(issueId: string, body: string) {
-    const comment$ = this.addCommentToIssue(issueId, body);
-    const close$ = this.closeIssue(issueId);
+    const comment$ = this.addCommentToIssue(issueId, body).pipe(catchError(error => { throw error }));
+    const close$ = this.closeIssue(issueId).pipe(catchError(error => { throw error }));
 
-    concat(comment$, close$)
-      .subscribe(({ data }) => {
-        console.log('got data', data); // set state with success / remove issue
-      },(error) => {
-        console.log('there was an error sending the query', error); // set error state
-      });
+    return concat(comment$, close$);
   }
 }

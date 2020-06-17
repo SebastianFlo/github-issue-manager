@@ -131,7 +131,7 @@ export class DashboardComponent implements OnInit {
         edges {
           node {
             name
-            issues(last: 10) {
+            issues(last: 10, states: OPEN) {
               edges {
                 node {
                   title
