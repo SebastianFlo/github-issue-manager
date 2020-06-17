@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { URLS } from '../config';
-import { take, catchError } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
 import { concat } from 'rxjs';
