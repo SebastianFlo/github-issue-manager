@@ -2,7 +2,7 @@
 
 # Github Issue Manager
 
-### [Preview](https://frosty-keller-99b1e5.netlify.app/login)
+### [Preview](https://frosty-keller-99b1e5.netlify.app/)
 
 ## Description
 
