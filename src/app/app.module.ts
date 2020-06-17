@@ -21,6 +21,7 @@ import { GithubReducer } from './data/github/reducer';
 import { metaReducers } from './data/meta.reducers';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { LoginGuard } from './modules/login/login.guard';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 
   ],
   providers: [
+    LoginGuard,
     AuthenticationService,
     GithubService,
     {
