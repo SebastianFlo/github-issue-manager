@@ -2,11 +2,13 @@
 
 # Github Issue Manager
 
+### [Preview](https://frosty-keller-99b1e5.netlify.app/login)
+
 ## Description
 
 A issue and task management app for github issues.
 
-Login with a Github token then you get redirected to a dashboard with the latest issues assigned to you (only OPEN issues).
+Login with a <b>[Github token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)</b> then you get redirected to a dashboard with the latest issues assigned to you (only OPEN issues).
 
 These can be resolved, closed or dragged into a Work Log.
 
