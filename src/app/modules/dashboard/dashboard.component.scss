@@ -7,7 +7,7 @@
   height: 60vh;
 }
 
-.example-container {
+.log-container {
   width: 400px;
   max-width: 100%;
   margin: 0 25px 25px 0;
@@ -15,7 +15,7 @@
   vertical-align: top;
 }
 
-.example-list {
+.log-list {
   border: solid 1px #ccc;
   min-height: 60px;
   background: white;
@@ -24,7 +24,7 @@
   display: block;
 }
 
-.example-box {
+.log-box {
   padding: 20px 10px;
   border-bottom: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
@@ -62,7 +62,7 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.example-custom-placeholder {
+.log-custom-placeholder {
   background: #ccc;
   border: dotted 3px #999;
   min-height: 60px;

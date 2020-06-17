@@ -1,11 +1,10 @@
-import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { Issue } from 'src/app/data/github/state';
 import { ConfirmationComponent } from '../confirmation/confirmation.component';
 import { GithubService } from 'src/app/external/github/github.service';
 import { StatusComponent } from '../status/status.component';
-import { state } from '@angular/animations';
 import { last } from 'rxjs/operators';
 
 @Component({
@@ -52,10 +51,7 @@ export class IssueComponent implements OnInit {
   disableIssue = false;
   resolution = '';
 
-  constructor(public dialog: MatDialog, private githubService: GithubService) {
-    // this.issueMethods.resolve = this.resolveIssue.bind(this);
-    // this.issueMethods.close = this.closeIssue.bind(this);
-  }
+  constructor(public dialog: MatDialog, private githubService: GithubService) {}
 
   openDialog(data: any) {
     const dialogRef = this.dialog.open(ConfirmationComponent, { data });
@@ -67,7 +63,6 @@ export class IssueComponent implements OnInit {
         return;
       }
 
-      // this.issueMethods[result](this.issue);
       this.closeIssue(result);
     });
   }
@@ -81,7 +76,7 @@ export class IssueComponent implements OnInit {
     const loadingStatus = this.dialog.open(StatusComponent, { data: { status: 'loading' } });
 
     this.githubService.commentAndCloseIssue(this.issue.id, comment).pipe(last())
-      .subscribe(({ data, errors }) => {
+      .subscribe(({ errors }) => {
         loadingStatus.close();
 
         if (errors) {
@@ -100,17 +95,15 @@ export class IssueComponent implements OnInit {
           return;
         }, 2000)
 
-        // state.dispatch remove iissue /id or just disable
         this.resolution = comment;
         this.disableIssue = true;
-      },(error) => {
+      },() => {
         loadingStatus.close();
         const errorStatus = this.dialog.open(StatusComponent, { data: { status: 'error' } });
 
         setTimeout(() => {
           errorStatus.close();
         }, 2000)
-        // console.log('there was an error sending the query', error); // set error state
       });
   }
 

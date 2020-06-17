@@ -21,25 +21,4 @@ export class AuthenticationService {
   public get currentUserValue(): User {
     return this.currentUserSubject.value;
   }
-
-  // setToken(client_id) {
-  //   return this.http
-  //     .get<any>(`${GITHUB_URL}/${GITHUB_LOGIN_URL}`, { params: { client_id } })
-  //     .pipe(
-  //       map((user) => {
-  //         // store user details and jwt token in local storage to keep user logged in between page refreshes
-  //         console.log(user);
-  //         // localStorage.setItem('currentUser', JSON.stringify(user));
-  //         // this.currentUserSubject.next(user);
-  //         return user;
-  //       })
-  //     );
-  // }
-
-
-  logout() {
-    // remove user from local storage and set current user to null
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
-  }
 }

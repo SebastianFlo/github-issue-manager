@@ -10,20 +10,8 @@ import { concat } from 'rxjs';
   providedIn: 'root'
 })
 export class GithubService {
-  // url = `${URLS.base}/users/${'SebastianFlo'}/repos`;
 
   constructor(private apollo: Apollo) { }
-
-  // getRepos() {
-  //   return this.http.get<any>(this.url)
-  //     .pipe(take(1))
-  //     .subscribe(
-  //         repos => {
-  //           console.log('repos', repos);
-  //         },
-  //         error => console.log('error', error)
-  //     );
-  // }
 
   commentMutation(issueId: string, body: string) {
     return `mutation {

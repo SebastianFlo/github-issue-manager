@@ -1,5 +1,3 @@
-// import { Action } from 'redux';
-// import { ReduxAction } from '../models';
 import * as types from './types';
 
 import { createAction, props } from '@ngrx/store';

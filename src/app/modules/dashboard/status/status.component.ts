@@ -1,9 +1,6 @@
 import {
   Component,
   OnInit,
-  Input,
-  Output,
-  EventEmitter,
   Inject,
 } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -29,12 +26,6 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
         </div>
 
     </mat-dialog-content>
-
-<!--    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
-    </mat-dialog-actions>
--->
-
   `,
   styleUrls: ['./status.component.scss'],
 })

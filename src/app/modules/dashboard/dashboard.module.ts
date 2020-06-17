@@ -14,10 +14,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { StatusComponent } from './status/status.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-
-
 @NgModule({
-  declarations: [DashboardComponent, IssueComponent, ConfirmationComponent, StatusComponent],
+  declarations: [
+    DashboardComponent,
+    IssueComponent,
+    ConfirmationComponent,
+    StatusComponent,
+  ],
   imports: [
     CommonModule,
 
@@ -26,8 +29,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCardModule,
     MatButtonModule,
     MatGridListModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
-  entryComponents: [ConfirmationComponent, StatusComponent]
+  entryComponents: [ConfirmationComponent, StatusComponent],
 })
-export class DashboardModule { }
+export class DashboardModule {}
