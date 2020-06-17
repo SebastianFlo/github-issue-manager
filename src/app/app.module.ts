@@ -3,24 +3,24 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+
+import { APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GraphQLModule } from './graphql.module';
 
-import { LoginModule } from './modules/login/login.module';
-import { AuthenticationService } from './external/auth/authentication.service';
-import { StoreModule } from '@ngrx/store';
-import { CoreReducer } from './data/core/reducer';
-import { TokenInterceptor } from './external/auth/authentication.interceptor';
-import { GithubService } from './external/github/github.service';
-import { APOLLO_OPTIONS } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import { GithubReducer } from './data/github/reducer';
 import { metaReducers } from './data/meta.reducers';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { CoreReducer } from './data/core/reducer';
+import { AuthenticationService } from './external/auth/authentication.service';
+import { TokenInterceptor } from './external/auth/authentication.interceptor';
+import { GithubService } from './external/github/github.service';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { LoginModule } from './modules/login/login.module';
 import { LoginGuard } from './modules/login/login.guard';
 
 @NgModule({
@@ -28,6 +28,7 @@ import { LoginGuard } from './modules/login/login.guard';
     AppComponent
   ],
   imports: [
+    // Libraries
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -36,7 +37,7 @@ import { LoginGuard } from './modules/login/login.guard';
     ReactiveFormsModule,
     FormsModule,
 
-    // Modules
+    // Local Modules
     LoginModule,
     DashboardModule,
     StoreModule.forRoot({
