@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { Issue } from 'src/app/data/github/state';
 import { ConfirmationComponent } from '../confirmation/confirmation.component';
+import { GithubService } from 'src/app/external/github/github.service';
 
 @Component({
   selector: 'app-issue',
@@ -26,8 +27,8 @@ import { ConfirmationComponent } from '../confirmation/confirmation.component';
 
       <mat-card-actions>
         <div class="flex-layout layout-center-h">
-          <button mat-button color="warn" (click)="openDialog({ prompt: 'Are you sure you want to close this issue?', onok: 'close' })">Close</button>
-          <button mat-button color="primary" (click)="openDialog({ prompt: 'Are you sure you want to resolve this issue?', onok: 'resolve' })">Resolve</button>
+          <button mat-button color="warn" (click)="openDialog({ prompt: 'Are you sure you want to close this issue?', onok: 'Closed' })">Close</button>
+          <button mat-button color="primary" (click)="openDialog({ prompt: 'Are you sure you want to resolve this issue?', onok: 'Resolved' })">Resolve</button>
         </div>
       </mat-card-actions>
 
@@ -49,9 +50,9 @@ export class IssueComponent implements OnInit {
     close: null,
   }
 
-  constructor(public dialog: MatDialog) {
-    this.issueMethods.resolve = this.resolveIssue;
-    this.issueMethods.close = this.closeIssue;
+  constructor(public dialog: MatDialog, private githubService: GithubService) {
+    // this.issueMethods.resolve = this.resolveIssue.bind(this);
+    // this.issueMethods.close = this.closeIssue.bind(this);
   }
 
   openDialog(data: any) {
@@ -64,17 +65,20 @@ export class IssueComponent implements OnInit {
         return;
       }
 
-      this.issueMethods[result](this.issue);
+      // this.issueMethods[result](this.issue);
+      this.closeIssue(result);
     });
   }
 
-  closeIssue(issue) {
-    console.log('closing issue', issue.resourcePath)
+  closeIssue(comment: string) {
+    this.githubService.commentAndCloseIssue(this.issue.id, comment);
+    console.log('closing issue', this.issue.resourcePath)
   }
 
-  resolveIssue(issue) {
-    console.log('resolving issue', issue.resourcePath)
-  }
+  // resolveIssue(issue) {
+  //   this.githubService.addCommentToIssue(issue.id, 'Resolved');
+  //   console.log('resolving issue', issue.resourcePath)
+  // }
 
   ngOnInit(): void {}
 

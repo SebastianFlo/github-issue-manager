@@ -7,7 +7,7 @@ import * as GithubActions from '../../data/github/actions';
 import { tap } from 'rxjs/operators';
 import { User } from 'src/app/data/models';
 import { Issue, Issues } from 'src/app/data/github/state';
-import { selectIssues } from 'src/app/data/github/selectors';
+import { selectIssues, selectRepositoriesIssues } from 'src/app/data/github/selectors';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { CdkDragDrop, copyArrayItem, transferArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -16,15 +16,16 @@ import { CdkDragDrop, copyArrayItem, transferArrayItem, moveItemInArray } from '
   selector: 'app-dashboard',
   template: `
     <div cdkDropListGroup>
-    <div class="background-light height-100">
-      <h2 class="text-title flex-layout layout-center-h layout-center-v">
+    <div class="height-100">
+      <h2 class="text-title text-white flex-layout layout-center-h layout-center-v">
         Good day {{ (user$ | async).name }}
       </h2>
     </div>
 
     <!-- {{ this.issues$ | async | json }} -->
 
-    <div id="issue-list" class="dashboard-issues flex-scroll-h flex-layout layout-space-between"
+    <div id="issue-list" class="dashboard-issues flex-scroll-h flex-layout"
+      [ngClass]="{ 'layout-space-between': issues.length > 3, 'layout-space-around': issues.length < 4 }"
       cdkDropList cdkDropListOrientation="horizontal"
       [cdkDropListData]="issues"
       (cdkDropListDropped)="drop($event)">
@@ -34,7 +35,7 @@ import { CdkDragDrop, copyArrayItem, transferArrayItem, moveItemInArray } from '
     </div>
 
     <div class="background-light height-100">
-    <h2 class="text-title flex-layout layout-center-h layout-center-v">
+    <h2 class="text-title text-black flex-layout layout-center-h layout-center-v">
       Work Log
     </h2>
   </div>
@@ -135,6 +136,7 @@ export class DashboardComponent implements OnInit {
                 node {
                   title
                   body
+                  id
                   resourcePath
                   repository {
                     name
@@ -190,6 +192,26 @@ issues: Issue[] = [];
   //   },
   // ];
 
+  // MDU6SXNzdWU2Mzk2NjM3ODk=
+  // mutation CloseIssuePayload($issueID: ID!) {
+  //   closeIssue(input: {issueId: $issueID }) {
+  //     issue {
+  //       id
+  //     }
+  //   }
+  // }
+
+  // mutation {
+//   addComment(input:{
+//     subjectId: "MDU6SXNzdWU2Mzk2NjM3ODk=",
+//     body:"Hello from GraphiQL!"
+//   }) {
+//     clientMutationId
+//   }
+// }
+
+
+
   todos = [
     {title: 'Example Issue 1' },
     {title: 'Example Issue 2' },
@@ -206,14 +228,30 @@ issues: Issue[] = [];
 
   ngOnInit(): void {
     this.user$ = this.store.pipe(select(selectUser));
-    this.issues$ = this.store.pipe(select(selectIssues));
 
-    this.issues$.subscribe(issues => this.issues = issues.edges.map(issue => issue.node));
-
+    // this.getIssues();
     this.getRepos();
   }
 
   getRepos() {
+    this.issues$ = this.store.pipe(select(selectRepositoriesIssues));
+    this.issues$.subscribe(issues => this.issues = issues.edges.map(issue => issue.node));
+
+    this.apollo
+      .watchQuery({
+        query: this.MyRepoIssuesQuery
+      })
+      .valueChanges.subscribe((result: any) => {
+        const repos = result.data && result.data.viewer.repositories;
+
+        this.store.dispatch(GithubActions.SetRepos({ payload: repos }));
+      });
+  }
+
+  getIssues() {
+    this.issues$ = this.store.pipe(select(selectIssues));
+    this.issues$.subscribe(issues => this.issues = issues.edges.map(issue => issue.node));
+
     // this.apollo
     //   .watchQuery({
     //     query: gql`

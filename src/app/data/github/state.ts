@@ -1,5 +1,6 @@
 export interface Issue {
   title: string;
+  id: string;
   resourcePath: string;
   body: string;
   repository: {
